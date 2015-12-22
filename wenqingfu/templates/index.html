@@ -1,72 +1,124 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html lang="zh-CN">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="description" content="专注为高考考生进行专业个性化推荐" />
-	    <meta name="author" content="Qingfu Wen" />
-	        <title>高考专业推荐</title>
-		    <link href="./static/css/bootstrap.css" rel="stylesheet">
-		        <link href="./static/css/datepicker.css" rel="stylesheet">
-			    <script src="./static/js/jquery.js"></script>
-			        <script src="./static/js/bootstrap-datepicker.js"></script>
-				<style>
-.main{
-	      width: 960px;
-	            margin: auto;
-		          padding-top: 20px;
-			        text-align: center;
-				     
-}
-    </style>
-    </head>
-    <body>
-        <header style="text-align:center">
-		      <h1>欢迎使用419门禁查询系统</h1>
-		          </header>
-			      <div style="float:right;margin-right:120px">
-				            <a href="/start">按始末时间显示</a>
-					        </div>
-						    <div class="main">
-							          <form action="/" method="POST" class="form-inline">
-									          <div class="input-append date" id="dpMonths"  data-date="{{this_month}}" data-date-format="yyyy-mm" data-date-viewmode="years" data-date-minviewmode="months">
-											            <input class="span2" size="16" type="text" value="{{this_month}}"name='month' readonly="">
-												              <span class="add-on"><i class="icon-calendar"></i></span>
-													              </div>
-														             
-														              <button type="submit" class="btn btn-primary">确定</button>
-															            </form>
-																          <table class="table table-condensed table-hover">
-																		          <thead>
-																				            <tr>
-																						                <th>#</th>
-																								            <th>姓名(Name)</th>
-																									                <th>卡号(CardID)</th>
-																											            <th>出勤时间(Hours)</th>
-																												              </tr>
-																													              </thead>
-																														              <tbody>
-																															                {% for item in items %} 
-																																	            {% if loop.index % 2 == 1 %}
-																																		                    <tr class="info">
-																																					                {% else %}
-																																							                <tr class="warning">
-																																										            {% endif %}    
-																																											                  <td>{{loop.index}}</td>
-																																													                <td>{{item[0]}}</td>
-																																															              <td>{{item[1]}}</td>
-																																																                    <td>{{item[2]}}</td>
-																																																		                </tr>
-																																																				          {% endfor %}
-																																																					          </tbody>
-																																																						        </table>
-																																																							    </div>
-																																																							        <script type="text/javascript">
-    $('#dpMonths').datepicker();
-        </script>
-	    <footer style="text-align:center">
-		            ©2014 清华大学软件学院信息系统与工程研究所
-			        </footer>
-				</body>
-				</html>
-				
+<!DOCTYPE html>
+<html>
 
+  <head>
+    <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/main.css">
+  </head>
+
+  <body>
+    <!--<div class="nav">
+      <div class="container">
+        <ul class="pull-left">
+          <li><a href="#">志愿填报推荐</a></li>
+          <li><a href="#">高考生的福音</a></li>
+        </ul>
+        <ul class="pull-right">
+          <li><a href="#">大数据系统分析</a></li>
+          <li><a href="#">我福</a></li>
+          <li><a href="#">小组小组真能干</a></li>
+        </ul>
+      </div>
+    </div>-->
+
+    <div class="jumbotron">
+        <div class="container">
+            <h1>为您量身定制的高考志愿推荐系统</h1>
+            <p></p>
+            <!--<a href="#">Start Now</a>-->
+        </div>
+        
+    </div> 
+    
+    <div class="getinput">
+        <form class="form-inline" method="POST">
+            <div class="form-group">
+              <label for="provinceSelect">考区：</label>
+              <select class="form-control" id="provinceSelect" name="province">
+                <option value="北京">北京</option>
+                <option value="浙江">浙江</option>
+                <option value="天津">天津</option>
+                <option value="安徽">安徽</option>
+                <option value="上海">上海</option>
+                <option value="福建">福建</option>
+                <option value="重庆">重庆</option>
+                <option value="江西">江西</option>
+                <option value="山东">山东</option>
+                <option value="河南">河南</option>
+                <option value="湖北">湖北</option>
+                <option value="湖南">湖南</option>
+                <option value="广东">广东</option>
+                <option value="海南">海南</option>
+                <option value="山西">山西</option>
+                <option value="青海">青海</option>
+                <option value="江苏">江苏</option>
+                <option value="辽宁">辽宁</option>
+                <option value="吉林">吉林</option>
+                <option value="河北">河北</option>
+                <option value="贵州">贵州</option>
+                <option value="四川">四川</option>
+                <option value="云南">云南</option>
+                <option value="陕西">陕西</option>
+                <option value="甘肃">甘肃</option>
+                <option value="黑龙江">黑龙江</option>
+                <option value="广西">广西</option>
+                <option value="宁夏">宁夏</option>
+                <option value="新疆">新疆</option>
+                <option value="内蒙古">内蒙古</option>
+                <option value="西藏">西藏</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="optionsRadios1">类别：</label>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="category" id="optionsRadios1" value="理科" checked>
+                  理科
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="category" id="optionsRadios2" value="文科">
+                  文科
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+                <label for="scoreInput">考分：</label>
+                <input type="text" class="form-control" id="scoreInput" name="score" placeholder="666">
+            </div>
+            <button type="submit" class="btn btn-default">快点我点我</button>
+        </form>
+        
+    </div>
+
+
+    <div class="showresults">
+	  <div class="container">
+		<div class="row">
+		  <div class="col-md-3">
+			<h3>show here</h3>
+			<p></p>
+			<p><a href="#"></a></p>
+		  </div>
+		  <div class="col-md-3">
+			<h3>show here</h3>
+			<p></p>
+			<p><a href="#"></a></p>
+		  </div>
+		  <div class="col-md-3">
+			<h3>show here</h3>
+			<p></p>
+			<p><a href="#"></a></p>
+		  </div>
+		  <div class="col-md-3">
+			<h3>show here</h3>
+			<p></p>
+			<p><a href="#"></a></p>
+		  </div>
+	    </div>
+	  </div>
+	</div>
+  </body>
+</html>
