@@ -12,14 +12,14 @@
 
 .jumbotron {
   background-color: #348fd4;
-  height: 500px;
+  height: 400px;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .jumbotron .container {
   position: relative;
-  top:100px;
+  top:50px;
 }
 
 .jumbotron h1 {
@@ -36,8 +36,8 @@
 
 .getinput{
   position: relative;
-  top:-180px; 
-  left:155px;
+  top: -100px; 
+  padding-left:300px;
 }
 
 .showresults {

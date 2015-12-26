@@ -30,7 +30,7 @@ class School:
 def getCurAndConn():
 
     try:
-        conn=MySQLdb.connect(host='localhost',user='root',passwd='919294',db='bigdatasystem',port=3306)
+        conn=MySQLdb.connect(host='localhost',user='root',passwd='',db='majordb',port=3306)
         cur=conn.cursor()
         return [cur,conn]
     except MySQLdb.Error,e:
