@@ -25,7 +25,7 @@
 .jumbotron h1 {
   color: #fff;
   font-size: 48px;  
-  font-family: 'Shift', sans-serif;
+  font-family: sans-serif;
   font-weight: bold;
 }
 
@@ -45,7 +45,7 @@
 }
 
 .showresults h3 {
-  font-family: 'Shift', sans-serif;
+  font-family: sans-serif;
   font-size: 18px;
   font-weight: bold;
 }

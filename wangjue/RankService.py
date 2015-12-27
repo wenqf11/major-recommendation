@@ -96,16 +96,7 @@ def getRank(schools):
     cur = connObject[0]
     conn = connObject[1]
     
-    cur.execute('set names utf8')
 
-    #获取score最大值
-    sqlStr = "select max(score) from Rank";
-    cur.execute(sqlStr);
-    results = cur.fetchall()
-    maxScore = 0;
-    for row in results:
-        maxScore = row[0]
-    
     #获取每个学校的Score
     for school in schools:
 
@@ -113,9 +104,8 @@ def getRank(schools):
         cur.execute(sqlStr)
         rankResults = cur.fetchall()
         #设置Score并进行归一化   
-        for row in rankResults:
-            maxScore = maxScore + 0.0
-            school.score = row[0]/maxScore
+        if rankResults:
+            school.score = rankResults[0][1]
 
     return schools
 
@@ -144,7 +134,7 @@ def getComments(schools):
             majorAvgScore = 0.0
             for commentRow in commentResults:
                 majorAvgScore += commentRow[1] + commentRow[2] + commentRow[3] + commentRow[4]
-            majorAvgScore /= (len(commentRow))
+            majorAvgScore /= (len(commentResults))
             avgScore += majorAvgScore
         avgScore /= (len(results)*4)
         
@@ -160,7 +150,7 @@ def getComments(schools):
             else:
                 for row in results:
                     comment = Comment(row[0]/5,row[1]/5,row[2]/5,row[3]/5,row[4]/5)
-                    major.comments.append(comment)  
+            major.comments.append(comment)  
     cur.close()
     conn.close()
     return schools

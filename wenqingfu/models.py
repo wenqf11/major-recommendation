@@ -5,11 +5,11 @@ class Major:
         self.majorId = majorId
         self.majorName = majorName
         self.comments = []
+        self.salary = 0;
 
 class Comment:
-
-    def __init__(self,commentId,comprehensiveScore,teachingScore,dealScore,workScore):
-        self.commentId = commentId
+    def __init__(self,majorId,comprehensiveScore,teachingScore,dealScore,workScore):
+        self.majorId = majorId
         self.comprehensiveScore = comprehensiveScore
         self.teachingScore = teachingScore
         self.dealScore = dealScore
@@ -18,6 +18,8 @@ class Comment:
 class School:
     def __init__(self,Id,schoolName):
         self.majors = []
-        self.score = 0
+        self.score = 0.0
         self.schoolId = Id
+        self.schoolAvgCommentScore = 0
+        self.schoolAvgSalary = 0
         self.schoolName= schoolName
