@@ -7,136 +7,55 @@ from models import *
 app = Flask(__name__)
 mysql = MySQL(app)
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = '919294'
 app.config['MYSQL_DB'] = 'bigdatasystem'
 app.config['MYSQL_HOST'] = '127.0.0.1'
 
+def getMarjorRank(schools):
+    
 
-def getComments(schools):
     cur = mysql.connection.cursor()
-
+    
+    cur.execute('set names utf8')
+    majorLists = []
     for school in schools:
 
         #求出学校的平均水平
+        sqlStr = "select rank from school where schoolId=%d" % (school.schoolId)
+        cur.execute(sqlStr)
+        schoolResult = cur.fetchall()
+        school.rank = schoolResult[0][0]
         sqlStr = "select * from major where schoolId=%d" % (school.schoolId)
         cur.execute(sqlStr)
         results = cur.fetchall()
-        avgScore = 0.0
-        for row in results:
-            sqlStr = "select * from comment where majorId=%d" % (row[0])
-            cur.execute(sqlStr)
-            commentResults = cur.fetchall()
-            majorAvgScore = 0.0
-            if commentResults:
-	            for commentRow in commentResults:
-	                majorAvgScore += commentRow[1] + commentRow[2] + commentRow[3] + commentRow[4]
-	            majorAvgScore /= (len(commentRow))
-	            avgScore += majorAvgScore
-        avgScore /= (len(results)*4)
-        
         #求每个major的评价
         for major in school.majors:
-            sqlStr = "select * from comment where majorId=%d" % \
+            sqlStr = "select commentScore,salary from major where majorId=%d" % \
                     (major.majorId)
             cur.execute(sqlStr)
-            results = cur.fetchall()
-            #如果数据库没有记录则设置平均值为打分
-            if len(results) == 0:
-                comment = Comment(0,avgScore/5,avgScore/5,avgScore/5,avgScore/5)
+            majorResult = cur.fetchall()
+            commentScore = majorResult[0][0];
+            salary = majorResult[0][1];
+            if(school.rank == None):
+                major.finalScore = (commentScore + salary)/2
             else:
-                for row in results:
-                    comment = Comment(row[0]/5,row[1]/5,row[2]/5,row[3]/5,row[4]/5)
-            major.comments.append(comment)  
-    cur.close()
-    return schools
-
-
-#获取专业薪水
-def getSalary(schools):
-    cur = mysql.connection.cursor()
-
-    sqlStr = "select max(money) from salary"
-    cur.execute(sqlStr)
-    results = cur.fetchall()
-    maxSalary = 0.0;
-    for row in results:
-        maxSalary = row[0];
-
-    for school in schools:
-
-        #求出学校的平均水平
-        sqlStr = "select * from major where schoolId=%d" % (school.schoolId)
-        cur.execute(sqlStr)
-        results = cur.fetchall()
-        avgSalary = 0.0
-        for row in results:
-            sqlStr = "select * from salary where majorId=%d" % (row[0])
-            cur.execute(sqlStr)
-            salaryResults = cur.fetchall()
-            salary = 0
-            for salaryRow in salaryResults:
-                salary = salaryRow[1]
-            avgSalary += salary
+                major.finalScore = (commentScore + school.rank + salary)/3
+            major.schoolName = school.schoolName
+            majorLists.append(major)
             
-        avgSalary /= (len(results))
-
-        
-        #求每个major的薪水
-        for major in school.majors:
-            sqlStr = "select * from salary where majorId=%d" % \
-                    (major.majorId)
-            cur.execute(sqlStr)
-            results = cur.fetchall()
-            
-            #如果数据库没有记录则设置平均值为打分
-            if len(results) == 0:
-                major.salary= avgSalary/maxSalary;
-            else:
-                for row in results:
-                    major.salary  = row[1]
     cur.close()
-    return schools
 
-
-#获取学校排名
-def getRank(schools):
-    cur = mysql.connection.cursor()
-    #获取每个学校的Score
-    for school in schools:
-
-        sqlStr = "select * from rank where schoolId=%d" % (school.schoolId)
-        cur.execute(sqlStr)
-        rankResults = cur.fetchall()
-        #设置Score并进行归一化   
-        for row in rankResults:
-            school.score = row[1]
-    cur.close()
-    return schools
+    majorLists.sort(key=lambda obj:obj.finalScore, reverse=True)
+    return majorLists
 
 
 def compute_major_score(schools, k):
+    
 	#获取专业评价
-	schools = getComments(schools)
-	#获取学校排名
-	schools = getRank(schools)
-	#获取专业薪水
-	schools = getSalary(schools)
 
-	majorLists = []
+	majorLists = getMarjorRank(schools)
 
-	#计算专业评价
-	for school in schools:
-	    for major in school.majors:
-	        comment = major.comments[0]
-	        commentScore = (comment.comprehensiveScore + comment.teachingScore + comment.dealScore + comment.workScore)/4.0
-	        rankScore = school.score;
-	        salaryScore = major.salary;
-	        major.finalScore = (commentScore + rankScore + salaryScore)/3
-	        major.schoolName = school.schoolName
-	        print school.schoolName, major.majorName, commentScore, rankScore, salaryScore, major.finalScore
-	        majorLists.append(major)
-
-	majorLists.sort(key=lambda obj:obj.finalScore, reverse=True)
+	
 	return majorLists[:k]
 
 

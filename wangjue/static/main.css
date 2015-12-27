@@ -1,0 +1,55 @@
+.nav a {
+  color: #5a5a5a;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 14px 10px;
+  text-transform: uppercase;
+}
+
+.nav li {
+  display: inline;
+}
+
+.jumbotron {
+  background-color: #348fd4;
+  height: 400px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.jumbotron .container {
+  position: relative;
+  top:50px;
+}
+
+.jumbotron h1 {
+  color: #fff;
+  font-size: 48px;  
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+.jumbotron p {
+  font-size: 20px;
+  color: #fff;
+}
+
+.getinput{
+  position: relative;
+  top: -100px; 
+  padding-left:300px;
+}
+
+.showresults {
+  background-color: #f7f7f7;
+}
+
+.showresults h3 {
+  font-family: sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.showresults a {
+  color: #00b0ff;
+}
