@@ -30,12 +30,28 @@ def getMarjorRank(schools):
         results = cur.fetchall()
         #求每个major的评价
         for major in school.majors:
-            sqlStr = "select commentScore,salary from major where majorId=%d" % \
+            sqlStr = "select commentScore,salary,ISTJ,INFJ,ISTP,INFP,ESTJ,ENFJ,ESTP,ENFP,ISFJ,INTJ,ISFP,INTP,ESFJ,ENTJ,ESFP,ENTP from major where majorId=%d" % \
                     (major.majorId)
             cur.execute(sqlStr)
             majorResult = cur.fetchall()
             commentScore = majorResult[0][0];
             salary = majorResult[0][1];
+            ISTJ = majorResult[0][2];
+            INFJ = majorResult[0][3];
+            ISTP = majorResult[0][4];
+            INFP = majorResult[0][5];
+            ESTJ = majorResult[0][6];
+            ENFJ = majorResult[0][7];
+            ESTP = majorResult[0][8];
+            ENFP = majorResult[0][9];
+            ISFJ = majorResult[0][10];
+            INTJ = majorResult[0][11];
+            ISFP = majorResult[0][12];
+            INTP = majorResult[0][13];
+            ESFJ = majorResult[0][14];
+            ENTJ = majorResult[0][15];
+            ESFP = majorResult[0][16];
+            ENTP = majorResult[0][17];
             if(school.rank == None):
                 major.finalScore = (commentScore + salary)/2
             else:
