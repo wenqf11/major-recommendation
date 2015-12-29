@@ -32,6 +32,7 @@
     
     <div class="getinput">
         <form class="form-inline" method="POST">
+            <div>
             <div class="form-group">
               <label for="provinceSelect">考区：</label>
               <select class="form-control" id="provinceSelect" name="province">
@@ -85,9 +86,54 @@
             </div>
             <div class="form-group">
                 <label for="scoreInput">考分：</label>
-                <input type="text" class="form-control" id="scoreInput" name="score" placeholder="666">
+                <input type="text" class="form-control" id="scoreInput" name="score">
             </div>
-            <button type="submit" class="btn btn-default">快点我点我</button>
+            <div class="form-group">
+                <label for="scoreInput">性格：</label>
+                <select class="form-control" id="provinceSelect" name="character">
+                <option value=""></option>
+                <option value="ISTJ">ISTJ</option>
+                <option value="INFJ">INFJ</option>
+                <option value="ISTP">ISTP</option>
+                <option value="INFP">INFP</option>
+                <option value="ESTJ">ESTJ</option>
+                <option value="ENFJ">ENFJ</option>
+                <option value="ESTP">ESTP</option>
+                <option value="ENFP">ENFP</option>
+                <option value="ISFJ">ISFJ</option>
+                <option value="INTJ">INTJ</option>
+                <option value="ISFP">ISFP</option>
+                <option value="INTP">INTP</option>
+                <option value="ESFJ">ESFJ</option>
+                <option value="ENTJ">ENTJ</option>
+                <option value="ESFP">ESFP</option>
+                <option value="ENTP">ENTP</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-default">提交</button>
+            </div>
+            <div class="second-line">
+              <div class="form-group">
+                <label for="scoreInput">学校系数：</label>
+                <input type="text" class="short-input form-control" name="school-ratio" value="{%if ratio%}{{ratio['school-ratio']}}  {% endif %}">
+              </div>
+              <div class="form-group">
+                <label for="scoreInput">学术系数：</label>
+                <input type="text" class="short-input form-control" name="academic-ratio" value="{%if ratio%}{{ratio['academic-ratio']}}{% endif %}">
+              </div>
+              <div class="form-group">
+                <label for="scoreInput">就业系数：</label>
+                <input type="text" class="short-input form-control" name="job-ratio" value="{%if ratio%}{{ratio['job-ratio']}}{% endif %}">
+              </div>
+              <div class="form-group">
+                <label for="scoreInput">评价系数：</label>
+                <input type="text" class="short-input form-control" name="comment-ratio" value="{%if ratio%}{{ratio['comment-ratio']}}{% endif %}">
+              </div>
+              <div class="form-group">
+                <label for="scoreInput">性格系数：</label>
+                <input type="text" class="short-input form-control" name="character-ratio" value="{%if ratio%}{{ratio['character-ratio']}}{% endif %}">
+              </div>
+            </div>
         </form>
         
     </div>
@@ -102,7 +148,11 @@
               <th>#</th>
               <th>学校</th>
               <th>专业名称</th>
-              <th>推荐系数</th>
+              <th>学校排名指数</th>
+              <th>学术指数</th>
+              <th>就业指数</th>
+              <th>评价指数</th>
+              <th>推荐指数</th>
             </tr>
           </thead>
           <tbody>
@@ -111,6 +161,11 @@
               <th scope="row">{{loop.index}}</th>
               <td>{{major.schoolName}}</td>
               <td>{{major.majorName}}</td>
+              <td>{{major.finalScore}}</td>
+              <td>{{major.finalScore}}</td>
+              <td>{{major.finalScore}}</td>
+              <td>{{major.finalScore}}</td>
+
               <td>{{major.finalScore}}</td>
             </tr>
             {% endfor %}

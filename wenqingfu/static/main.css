@@ -5,7 +5,15 @@
   padding: 14px 10px;
   text-transform: uppercase;
 }
-
+.form-group {
+  padding-right: 8px !important;
+}
+.second-line{
+  padding-top: 30px;
+}
+.short-input{
+  width: 60px !important;
+}
 .nav li {
   display: inline;
 }
@@ -36,7 +44,7 @@
 
 .getinput{
   position: relative;
-  top: -100px; 
+  top: -160px; 
   padding-left:300px;
 }
 
