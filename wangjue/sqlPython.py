@@ -290,7 +290,28 @@ def SQLAvgMajorSalaryAndComment():
     conn.commit()
     conn.close()
     
+def lookForTsinghua():
+    
+    connObject = getCurAndConn()
+    cur = connObject[0]
+    conn = connObject[1]
+    cur.execute('set names utf8')
+    sqlStr = "select majorId from major where schoolId = 200"
+    cur.execute(sqlStr)
+    schoolIdResult = cur.fetchall()
+    for schoolIds in schoolIdResult:
 
+        schoolId = schoolIds[0]
+        sqlStr = "select * from entryscore where majorId=%d" % (schoolId)
+        cur.execute(sqlStr)
+        results = cur.fetchall()
+        
+        for row in results:
+                
+                print "%s %s %s %s %s %s" % (row[0],row[1],row[2],row[3],row[4],row[5])
+    cur.close()
+    conn.commit()
+    conn.close()
 #先讲major的salary获取
 #SQLSalary() 
 #将有salary的school平均值计算 
@@ -300,4 +321,6 @@ def SQLAvgMajorSalaryAndComment():
 
 #SQLAvgComment()
 #SQLMakeAvgComment()
-SQLAvgMajorSalaryAndComment()
+#SQLAvgMajorSalaryAndComment()
+
+lookForTsinghua()
