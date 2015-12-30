@@ -11,7 +11,7 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'bigdatasystem'
 app.config['MYSQL_HOST'] = '127.0.0.1'
 
-def getMarjorRank(schools):
+def getMarjorRank(schools, ratio, character):
     
 
     cur = mysql.connection.cursor()
@@ -34,28 +34,42 @@ def getMarjorRank(schools):
                     (major.majorId)
             cur.execute(sqlStr)
             majorResult = cur.fetchall()
-            commentScore = majorResult[0][0];
-            salary = majorResult[0][1];
-            ISTJ = majorResult[0][2];
-            INFJ = majorResult[0][3];
-            ISTP = majorResult[0][4];
-            INFP = majorResult[0][5];
-            ESTJ = majorResult[0][6];
-            ENFJ = majorResult[0][7];
-            ESTP = majorResult[0][8];
-            ENFP = majorResult[0][9];
-            ISFJ = majorResult[0][10];
-            INTJ = majorResult[0][11];
-            ISFP = majorResult[0][12];
-            INTP = majorResult[0][13];
-            ESFJ = majorResult[0][14];
-            ENTJ = majorResult[0][15];
-            ESFP = majorResult[0][16];
-            ENTP = majorResult[0][17];
-            if(school.rank == None):
-                major.finalScore = (commentScore + salary)/2
+            major.commentScore = majorResult[0][0];
+            major.salary = majorResult[0][1];
+
+            char_dict = dict()
+            char_dict['ISTJ'] = majorResult[0][2];
+            char_dict['INFJ'] = majorResult[0][3];
+            char_dict['ISTP'] = majorResult[0][4];
+            char_dict['INFP'] = majorResult[0][5];
+            char_dict['ESTJ'] = majorResult[0][6];
+            char_dict['ENFJ'] = majorResult[0][7];
+            char_dict['ESTP'] = majorResult[0][8];
+            char_dict['ENFP'] = majorResult[0][9];
+            char_dict['ISFJ'] = majorResult[0][10];
+            char_dict['INTJ'] = majorResult[0][11];
+            char_dict['ISFP'] = majorResult[0][12];
+            char_dict['INTP'] = majorResult[0][13];
+            char_dict['ESFJ'] = majorResult[0][14];
+            char_dict['ENTJ'] = majorResult[0][15];
+            char_dict['ESFP'] = majorResult[0][16];
+            char_dict['ENTP'] = majorResult[0][17];
+            char_dict[''] = 0
+
+            cur.execute("select academicScore from academicscore where majorId=%d"% major.majorId)
+            major.academicScore = cur.fetchone()
+
+            if not major.academicScore:
+            	major.academicScore = 0
             else:
-                major.finalScore = (commentScore + school.rank + salary)/3
+            	major.academicScore = float(major.academicScore[0])
+
+            if not school.rank:
+            	school.rank = 0
+
+            major.characterScore = char_dict[character] * 10
+            major.schoolRank = school.rank
+            major.finalScore = major.commentScore*ratio['comment-ratio']+ major.academicScore*ratio['academic-ratio'] + major.schoolRank *ratio['school-ratio'] + major.salary*ratio['job-ratio']
             major.schoolName = school.schoolName
             majorLists.append(major)
             
@@ -65,11 +79,11 @@ def getMarjorRank(schools):
     return majorLists
 
 
-def compute_major_score(schools, k):
+def compute_major_score(schools, ratio, character, k):
     
 	#获取专业评价
 
-	majorLists = getMarjorRank(schools)
+	majorLists = getMarjorRank(schools, ratio, character)
 
 	
 	return majorLists[:k]
@@ -127,14 +141,24 @@ def index():
 	else:
 		province = request.form['province']
 		category = request.form['category']
+		character = request.form['character']
+
 		year = 2014
+		ratio = dict()
 		try:
 			score = int(request.form['score'])
+			k = int(request.form['topk'])
+			ratio['school-ratio'] = float(request.form['school-ratio'])
+			ratio['academic-ratio'] = float(request.form['academic-ratio'])
+			ratio['job-ratio'] = float(request.form['job-ratio'])
+			ratio['comment-ratio'] = float(request.form['comment-ratio'])
 		except Exception, e:
-			return render_template("index.html", error=u"输入分数有误") 
+			return render_template("index.html", error=u"输入参数有误")
 		school_major_list = get_candidate_list(province, category, year, score)
-		major_list = compute_major_score(school_major_list, 5)
-		return render_template("index.html", major_list=major_list)
+		major_list = compute_major_score(school_major_list, ratio, character, k)
+		input_score = score
+		return render_template("index.html", major_list=major_list, ratio=ratio, topk=k, input_score=score,
+			province=province, character=character, category=category)
 
 
 if __name__ == "__main__":

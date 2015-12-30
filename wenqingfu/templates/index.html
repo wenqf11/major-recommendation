@@ -86,11 +86,11 @@
             </div>
             <div class="form-group">
                 <label for="scoreInput">考分：</label>
-                <input type="text" class="form-control" id="scoreInput" name="score">
+                <input type="text" class="short-input form-control" id="scoreInput" name="score" value="{%if input_score%}{{input_score}}{%endif%}">
             </div>
             <div class="form-group">
                 <label for="scoreInput">性格：</label>
-                <select class="form-control" id="provinceSelect" name="character">
+                <select class="form-control" id="characterSelect" name="character">
                 <option value=""></option>
                 <option value="ISTJ">ISTJ</option>
                 <option value="INFJ">INFJ</option>
@@ -110,35 +110,33 @@
                 <option value="ENTP">ENTP</option>
               </select>
             </div>
+            <div class="form-group">
+                <label for="scoreInput">前k个：</label>
+                <input type="text" class="short-input form-control" name="topk" value="{%if topk%}{{topk}}{% else %}10{% endif %}">
+            </div>
             <button type="submit" class="btn btn-default">提交</button>
             </div>
             <div class="second-line">
               <div class="form-group">
                 <label for="scoreInput">学校系数：</label>
-                <input type="text" class="short-input form-control" name="school-ratio" value="{%if ratio%}{{ratio['school-ratio']}}  {% endif %}">
+                <input type="text" class="short-input form-control" name="school-ratio" value="{%if ratio%}{{ratio['school-ratio']}}{% else %}0.25{% endif %}">
               </div>
               <div class="form-group">
                 <label for="scoreInput">学术系数：</label>
-                <input type="text" class="short-input form-control" name="academic-ratio" value="{%if ratio%}{{ratio['academic-ratio']}}{% endif %}">
+                <input type="text" class="short-input form-control" name="academic-ratio" value="{%if ratio%}{{ratio['academic-ratio']}}{% else %}0.25{% endif %}">
               </div>
               <div class="form-group">
                 <label for="scoreInput">就业系数：</label>
-                <input type="text" class="short-input form-control" name="job-ratio" value="{%if ratio%}{{ratio['job-ratio']}}{% endif %}">
+                <input type="text" class="short-input form-control" name="job-ratio" value="{%if ratio%}{{ratio['job-ratio']}}{% else %}0.25{% endif %}">
               </div>
               <div class="form-group">
                 <label for="scoreInput">评价系数：</label>
-                <input type="text" class="short-input form-control" name="comment-ratio" value="{%if ratio%}{{ratio['comment-ratio']}}{% endif %}">
-              </div>
-              <div class="form-group">
-                <label for="scoreInput">性格系数：</label>
-                <input type="text" class="short-input form-control" name="character-ratio" value="{%if ratio%}{{ratio['character-ratio']}}{% endif %}">
+                <input type="text" class="short-input form-control" name="comment-ratio" value="{%if ratio%}{{ratio['comment-ratio']}}{% else %}0.25{% endif %}">
               </div>
             </div>
         </form>
         
     </div>
-
-
     <div class="showresults">
       <div class="container">
         {%if major_list%}
@@ -148,6 +146,7 @@
               <th>#</th>
               <th>学校</th>
               <th>专业名称</th>
+              <th>综合评分</th>
               <th>学校排名指数</th>
               <th>学术指数</th>
               <th>就业指数</th>
@@ -162,11 +161,11 @@
               <td>{{major.schoolName}}</td>
               <td>{{major.majorName}}</td>
               <td>{{major.finalScore}}</td>
-              <td>{{major.finalScore}}</td>
-              <td>{{major.finalScore}}</td>
-              <td>{{major.finalScore}}</td>
-
-              <td>{{major.finalScore}}</td>
+              <td>{{major.schoolRank}}</td>
+              <td>{{major.academicScore}}</td>
+              <td>{{major.salary}}</td>
+              <td>{{major.commentScore}}</td>
+              <td>{{major.characterScore}}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -175,4 +174,32 @@
       </div>
 	  </div>
   </body>
+
+
+  {% if province %}
+      <script>
+        var obj = document.getElementById('provinceSelect');
+        obj.value = "{{province}}";
+      </script>
+    {% endif%}
+
+    </div>
+
+    {% if character %}
+      <script>
+        var obj = document.getElementById('characterSelect');
+        obj.value = "{{character}}";
+      </script>
+    {% endif%}
+
+    {% if category %}
+      
+      <script>
+        var objs = document.getElementsByName('category');
+        if ("{{category}}" == "文科"){
+          objs[1].checked = true;
+          objs[0].checked = false;
+        }
+      </script>
+    {% endif%}
 </html>
